@@ -22,7 +22,8 @@ on('ready',() => {
   var collectedAttributes = "";
   let wantedAttributes ;
   var columnjumper = 0;
-  
+  let myoutput;
+
   const resolveAttr = (cid,name) => ({
     name: name,
     current: getAttrByName(cid,name),
@@ -38,7 +39,7 @@ on('ready',() => {
 
       collectedAttributes =  resolveAttr(cid,myAtt);
 
-      output += "<td><strong>"+collectedAttributes['name'].slice(0,3).toUpperCase()+":</strong></td><td>"+(resolveAttr(cid,myAtt+"_mod")['current']>0?"+"+resolveAttr(cid,myAtt+"_mod")['current']:resolveAttr(cid,myAtt+"_mod")['current'])+"</td><td><small>("+collectedAttributes['current']+")</small></td><td>&nbsp;</td>";
+      output += "<td><strong>"+collectedAttributes['name'].slice(0,3).toUpperCase()+":</strong></td><td>"+(resolveAttr(cid,myAtt+"_mod")['current']>0?"+"+resolveAttr(cid,myAtt+"_mod")['current']:resolveAttr(cid,myAtt+"_mod")['current'])+"</td><td><small>("+collectedAttributes['current']+")</small></td><td>&nbsp;&nbsp;</td>";
 
       if (columnjumper == 1) {
        output += "</tr><tr>";
@@ -65,13 +66,13 @@ const capitalizeFirstLetter = (string) => {
     cid = cid["id"];
     
     output = "<br>"+resolveAttr(cid,"race")['current']+" Lvl "+resolveAttr(cid,"level")['current']+" "+resolveAttr(cid,"class")['current'];
-    output += "<br>Inspiration: "+(resolveAttr(cid,"inspiration")['current']=="on"?"<strong style='color:white;text-shadow: 2px 2px 4px #009000;'>Yes</strong>":"no");
-    output += "<br>HP: "+resolveAttr(cid,"hp")['current']+"/"+resolveAttr(cid,"hp")['max']+" ";
-    output += (resolveAttr(cid,"hp")['current'] < resolveAttr(cid,"hp")['max']?" <small style='color:red'>down by "+(resolveAttr(cid,"hp")['max']-resolveAttr(cid,"hp")['current'])+ "</small> ":"");   
+    output += (resolveAttr(cid,"inspiration")['current']=="on"?" <strong style='color:white;text-shadow: 2px 2px 4px #009000;'>&#127775;</strong>":"");
+    output += "<br><br><strong>HP:</strong> "+resolveAttr(cid,"hp")['current']+"/"+resolveAttr(cid,"hp")['max']+" ";
+    output += (resolveAttr(cid,"hp")['current'] < resolveAttr(cid,"hp")['max']?" <small style='color:red'>down by "+(resolveAttr(cid,"hp")['max']-resolveAttr(cid,"hp")['current'])+ " &#129301;</small> ":"");   
     output += (resolveAttr(cid,"hp_temp")['current'] > 0?" + "+resolveAttr(cid,"hp_temp")['current']+ " TMP":"");
-    output += "<br>AC: "+resolveAttr(cid,"ac")['current']+", Initiative bonus: "+(resolveAttr(cid,"initiative_bonus")['current']>0?"+"+resolveAttr(cid,"initiative_bonus")['current']:resolveAttr(cid,"initiative_bonus")['current']);
-    output += "<br>Speed: "+resolveAttr(cid,"speed")['current']+" ft, passive perception: "+resolveAttr(cid,"passive_wisdom")['current'];
-
+    output += "<br><strong>AC:</strong> "+resolveAttr(cid,"ac")['current'];
+    output += "<br><br>Speed: "+resolveAttr(cid,"speed")['current']+" ft, Passive Perception: "+resolveAttr(cid,"passive_wisdom")['current']+"<br>Initiative bonus: "+(resolveAttr(cid,"initiative_bonus")['current']>0?"+"+resolveAttr(cid,"initiative_bonus")['current']:resolveAttr(cid,"initiative_bonus")['current']);
+    output += "<br><br>";
     return output;
   };
   
@@ -107,12 +108,15 @@ on('chat:message', (msg) => {
         if (character) {
   
       /* get the attributes and assemble the output */
-        let myoutput;
         log (character);
-        myoutput = character["bio"] + getCharOtherAtt(character) + getCharMainAtt(character);
-        sendChat(scname, `/w gm `+ myoutput); // eslint-disable-line quotes
+        var charname=character.get("name");
+        var charicon=character.get("avatar");
+        myoutput += "<div style='border:1px solid black; background-color: #F8ECE0; padding:8px; border-radius: 6px; font-size:0.85em;line-height:0.9em;'>";
+        myoutput += "<div style='display:inline-block; font-variant: small-caps; color:red; font-size:1.3em;'><img src='" + charicon + "' style='height:32px;width:auto;margin-right:5px;vertical-align:middle'>" + charname + "</div>" + getCharOtherAtt(character) + getCharMainAtt(character);
+        myoutput += "</div>";
         }
       });
     }
+  sendChat(scname, `/w gm `+ myoutput); // eslint-disable-line quotes
   });
 });
