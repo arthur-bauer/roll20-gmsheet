@@ -20,7 +20,8 @@ on('ready',() => {
 
   var output = "";
   var collectedAttributes = "";
-  var wantedAttributes = ["race","level","hp","ac","speed"];
+  let wantedAttributes ;
+  var columnjumper = 0;
   
   const resolveAttr = (cid,name) => ({
     name: name,
@@ -30,17 +31,25 @@ on('ready',() => {
    
   
   const getCharMainAtt = (cid) => {
-    output = "<table border=0>";
+    output = "<table border=0><tr>";
     cid = cid["id"];
     wantedAttributes=["strength","dexterity","constitution","intelligence","wisdom","charisma"]
     wantedAttributes.forEach((myAtt)=> {
 
       collectedAttributes =  resolveAttr(cid,myAtt);
-      output += "<tr><td><strong>"+collectedAttributes['name'].slice(0,3).toUpperCase()+":</strong></td><td><small>("+collectedAttributes['current']+")</small></td><td>"+(resolveAttr(cid,myAtt+"_mod")['current']>0?"+"+resolveAttr(cid,myAtt+"_mod")['current']:resolveAttr(cid,myAtt+"_mod")['current'])+"</td></tr>";
 
+      output += "<td><strong>"+collectedAttributes['name'].slice(0,3).toUpperCase()+":</strong></td><td>"+(resolveAttr(cid,myAtt+"_mod")['current']>0?"+"+resolveAttr(cid,myAtt+"_mod")['current']:resolveAttr(cid,myAtt+"_mod")['current'])+"</td><td><small>("+collectedAttributes['current']+")</small></td><td>&nbsp;</td>";
+
+      if (columnjumper == 1) {
+       output += "</tr><tr>";
+       columnjumper=0;       
+      }
+      else {
+        columnjumper=1;
+      }
 
     });
-    output += "</table>";
+    output += "</tr></table>";
     return output;
   };
   
@@ -50,16 +59,19 @@ const capitalizeFirstLetter = (string) => {
 }
 
 
-  const getCharOtherAtt = (cid,wantedAttributes) => {
+  const getCharOtherAtt = (cid) => {
+
     output = "";
     cid = cid["id"];
     
-    wantedAttributes.forEach((myAtt)=> {
+    output = "<br>"+resolveAttr(cid,"race")['current']+" Lvl "+resolveAttr(cid,"level")['current']+" "+resolveAttr(cid,"class")['current'];
+    output += "<br>Inspiration: "+(resolveAttr(cid,"inspiration")['current']=="on"?"<strong style='color:white;text-shadow: 2px 2px 4px #009000;'>Yes</strong>":"no");
+    output += "<br>HP: "+resolveAttr(cid,"hp")['current']+"/"+resolveAttr(cid,"hp")['max']+" ";
+    output += (resolveAttr(cid,"hp")['current'] < resolveAttr(cid,"hp")['max']?" <small style='color:red'>down by "+(resolveAttr(cid,"hp")['max']-resolveAttr(cid,"hp")['current'])+ "</small> ":"");   
+    output += (resolveAttr(cid,"hp_temp")['current'] > 0?" + "+resolveAttr(cid,"hp_temp")['current']+ " TMP":"");
+    output += "<br>AC: "+resolveAttr(cid,"ac")['current']+", Initiative bonus: "+(resolveAttr(cid,"initiative_bonus")['current']>0?"+"+resolveAttr(cid,"initiative_bonus")['current']:resolveAttr(cid,"initiative_bonus")['current']);
+    output += "<br>Speed: "+resolveAttr(cid,"speed")['current']+" ft, passive perception: "+resolveAttr(cid,"passive_wisdom")['current'];
 
-      collectedAttributes =  resolveAttr(cid,myAtt);
-      output += "<br>"+collectedAttributes['name'].toUpperCase()+":</strong> "+collectedAttributes['current'];
-      if (collectedAttributes['max']) output+="/"+collectedAttributes['max'];
-    });
     return output;
   };
   
@@ -96,7 +108,8 @@ on('chat:message', (msg) => {
   
       /* get the attributes and assemble the output */
         let myoutput;
-        myoutput = character._name + getCharMainAtt(character);
+        log (character);
+        myoutput = character["bio"] + getCharOtherAtt(character) + getCharMainAtt(character);
         sendChat(scname, `/w gm `+ myoutput); // eslint-disable-line quotes
         }
       });
