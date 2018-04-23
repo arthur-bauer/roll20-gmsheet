@@ -1,0 +1,5 @@
+## To do
+
+- Correct colors (something more like D&D)
+- Spell slots
+- clickable links for initiative etc.
