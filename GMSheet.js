@@ -22,7 +22,7 @@ on('ready',() => {
   var collectedAttributes = "";
   let wantedAttributes ;
   var columnjumper = 0;
-  let myoutput;
+  var myoutput = "";
 
   const resolveAttr = (cid,name) => ({
     name: name,
@@ -69,7 +69,7 @@ const capitalizeFirstLetter = (string) => {
     output += (resolveAttr(cid,"inspiration")['current']=="on"?" <strong style='color:white;text-shadow: 2px 2px 4px #009000;'>&#127775;</strong>":"");
     output += "<br><br><strong>HP:</strong> "+resolveAttr(cid,"hp")['current']+"/"+resolveAttr(cid,"hp")['max']+" ";
     output += (resolveAttr(cid,"hp")['current'] < resolveAttr(cid,"hp")['max']?" <small style='color:red'>down by "+(resolveAttr(cid,"hp")['max']-resolveAttr(cid,"hp")['current'])+ " &#129301;</small> ":"");   
-    output += (resolveAttr(cid,"hp_temp")['current'] > 0?" + "+resolveAttr(cid,"hp_temp")['current']+ " TMP":"");
+    output += (resolveAttr(cid,"hp_temp")['current'] > 0?" <span style='color:green'>+ "+resolveAttr(cid,"hp_temp")['current']+ " TMP</span>":"");
     output += "<br><strong>AC:</strong> "+resolveAttr(cid,"ac")['current'];
     output += "<br><br>Speed: "+resolveAttr(cid,"speed")['current']+" ft, Passive Perception: "+resolveAttr(cid,"passive_wisdom")['current']+"<br>Initiative bonus: "+(resolveAttr(cid,"initiative_bonus")['current']>0?"+"+resolveAttr(cid,"initiative_bonus")['current']:resolveAttr(cid,"initiative_bonus")['current']);
     output += "<br><br>";
@@ -97,7 +97,6 @@ on('chat:message', (msg) => {
     
     else
     {
-  
       const partymember = Object.entries(msg.selected).length;
       msg.selected.forEach((obj) => {
         const token = getObj('graphic', obj._id); // eslint-disable-line no-underscore-dangle
@@ -108,15 +107,15 @@ on('chat:message', (msg) => {
         if (character) {
   
       /* get the attributes and assemble the output */
-        log (character);
         var charname=character.get("name");
         var charicon=character.get("avatar");
-        myoutput += "<div style='border:1px solid black; background-color: #F8ECE0; padding:8px; border-radius: 6px; font-size:0.85em;line-height:0.9em;'>";
-        myoutput += "<div style='display:inline-block; font-variant: small-caps; color:red; font-size:1.3em;'><img src='" + charicon + "' style='height:32px;width:auto;margin-right:5px;vertical-align:middle'>" + charname + "</div>" + getCharOtherAtt(character) + getCharMainAtt(character);
-        myoutput += "</div>";
+       if (myoutput.length>0) myoutput += "<br>"; 
+       myoutput += "<div style='display:inline-block; font-variant: small-caps; color:red; font-size:1.8em;margin-top:5px;'><img src='" + charicon + "' style='height:48px;width:auto;margin-right:5px;margin-bottom:5px;vertical-align:middle'>" + charname + "</div>" + getCharOtherAtt(character) + getCharMainAtt(character);
         }
       });
     }
-  sendChat(scname, `/w gm `+ myoutput); // eslint-disable-line quotes
+    
+  sendChat(scname, "/w gm <div style='border:1px solid black; background-color: #F8ECE0; padding:8px; border-radius: 6px; font-size:0.85em;line-height:0.95em;'>" + myoutput + "</div>"); // eslint-disable-line quotes
+  myoutput = "";
   });
 });
