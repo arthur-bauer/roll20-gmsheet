@@ -66,10 +66,10 @@ const capitalizeFirstLetter = (string) => {
     cid = cid["id"];
     
     output = "<br>"+resolveAttr(cid,"race")['current']+" Lvl "+resolveAttr(cid,"level")['current']+" "+resolveAttr(cid,"class")['current'];
-    output += (resolveAttr(cid,"inspiration")['current']=="on"?" <strong style='color:white;text-shadow: 2px 2px 4px #009000;'>&#127775;</strong>":"");
+    output += (resolveAttr(cid,"inspiration")['current']=="on"?" <strong style='color:white;text-shadow: 2px 2px 4px #009000;' title='Character has inspiration!'>&#127775;</strong>":"");
     output += "<br><br><strong>HP:</strong> "+resolveAttr(cid,"hp")['current']+"/"+resolveAttr(cid,"hp")['max']+" ";
-    output += (resolveAttr(cid,"hp")['current'] < resolveAttr(cid,"hp")['max']?" <small style='color:#9d0a0e'>down by "+(resolveAttr(cid,"hp")['max']-resolveAttr(cid,"hp")['current'])+ " &#129301;</small> ":"");   
-    output += (resolveAttr(cid,"hp_temp")['current'] > 0?" <span style='color:green'>+ "+resolveAttr(cid,"hp_temp")['current']+ " TMP</span>":"");
+    output += (parseInt(resolveAttr(cid,"hp")['current']) < parseInt(resolveAttr(cid,"hp")['max'])?" <small style='color:#9d0a0e' title='down by "+(parseInt(resolveAttr(cid,"hp")['max'])-parseInt(resolveAttr(cid,"hp")['current']))+ " '>&#129301; "+(parseInt(resolveAttr(cid,"hp")['current'])-parseInt(resolveAttr(cid,"hp")['max']))+ "</small> ":"");   
+    output += (parseInt(resolveAttr(cid,"hp_temp")['current']) > 0?" <span style='color:green'>+ "+resolveAttr(cid,"hp_temp")['current']+ " TMP</span>":"");
     output += "<br><strong>AC:</strong> "+resolveAttr(cid,"ac")['current'];
     output += "<br><br>Speed: "+resolveAttr(cid,"speed")['current']+" ft, Passive Perception: "+resolveAttr(cid,"passive_wisdom")['current']+"<br>Initiative bonus: "+(resolveAttr(cid,"initiative_bonus")['current']>0?"+"+resolveAttr(cid,"initiative_bonus")['current']:resolveAttr(cid,"initiative_bonus")['current']);
     output += "<br><br>";
