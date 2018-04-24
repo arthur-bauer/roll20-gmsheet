@@ -68,7 +68,7 @@ const capitalizeFirstLetter = (string) => {
     output = "<br>"+resolveAttr(cid,"race")['current']+" Lvl "+resolveAttr(cid,"level")['current']+" "+resolveAttr(cid,"class")['current'];
     output += (resolveAttr(cid,"inspiration")['current']=="on"?" <strong style='color:white;text-shadow: 2px 2px 4px #009000;'>&#127775;</strong>":"");
     output += "<br><br><strong>HP:</strong> "+resolveAttr(cid,"hp")['current']+"/"+resolveAttr(cid,"hp")['max']+" ";
-    output += (resolveAttr(cid,"hp")['current'] < resolveAttr(cid,"hp")['max']?" <small style='color:red'>down by "+(resolveAttr(cid,"hp")['max']-resolveAttr(cid,"hp")['current'])+ " &#129301;</small> ":"");   
+    output += (resolveAttr(cid,"hp")['current'] < resolveAttr(cid,"hp")['max']?" <small style='color:#9d0a0e'>down by "+(resolveAttr(cid,"hp")['max']-resolveAttr(cid,"hp")['current'])+ " &#129301;</small> ":"");   
     output += (resolveAttr(cid,"hp_temp")['current'] > 0?" <span style='color:green'>+ "+resolveAttr(cid,"hp_temp")['current']+ " TMP</span>":"");
     output += "<br><strong>AC:</strong> "+resolveAttr(cid,"ac")['current'];
     output += "<br><br>Speed: "+resolveAttr(cid,"speed")['current']+" ft, Passive Perception: "+resolveAttr(cid,"passive_wisdom")['current']+"<br>Initiative bonus: "+(resolveAttr(cid,"initiative_bonus")['current']>0?"+"+resolveAttr(cid,"initiative_bonus")['current']:resolveAttr(cid,"initiative_bonus")['current']);
@@ -110,12 +110,12 @@ on('chat:message', (msg) => {
         var charname=character.get("name");
         var charicon=character.get("avatar");
        if (myoutput.length>0) myoutput += "<br>"; 
-       myoutput += "<div style='display:inline-block; font-variant: small-caps; color:red; font-size:1.8em;margin-top:5px;'><img src='" + charicon + "' style='height:48px;width:auto;margin-right:5px;margin-bottom:5px;vertical-align:middle'>" + charname + "</div>" + getCharOtherAtt(character) + getCharMainAtt(character);
+       myoutput += "<div style='display:inline-block; font-variant: small-caps; color:##9d0a0e; font-size:1.8em;margin-top:5px;'><img src='" + charicon + "' style='height:48px;width:auto;margin-right:5px;margin-bottom:5px;vertical-align:middle'>" + charname + "</div>" + getCharOtherAtt(character) + getCharMainAtt(character);
         }
       });
     }
     
-  sendChat(scname, "/w gm <div style='border:1px solid black; background-color: #F8ECE0; padding:8px; border-radius: 6px; font-size:0.85em;line-height:0.95em;'>" + myoutput + "</div>"); // eslint-disable-line quotes
+  sendChat(scname, "/w gm <div style='border:1px solid black; background-color: #f9f7ec; padding:8px; border-radius: 6px; font-size:0.85em;line-height:0.95em;'>" + myoutput + "</div>"); // eslint-disable-line quotes
   myoutput = "";
   });
 });
