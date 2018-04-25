@@ -1,5 +1,3 @@
-## To do
-
-- Correct colors (something more like D&D)
-- Spell slots
-- clickable links for initiative etc.
+x Correct colors (something more like D&D)
+x Spell slots
+Clickable links for initiative etc.
