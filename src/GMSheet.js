@@ -23,14 +23,14 @@ on('ready', () => {
     current: getAttrByName(cid, name),
     max: getAttrByName(cid, name, 'max'),
   });
-  const getCharMainAtt = (cid) => {
+  const getCharMainAtt = (cid2) => {
     output = '<table border=0><tr>';
-    const cid2 = cid.id;
+    const cid = cid2.id;
     wantedAttributes = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
     wantedAttributes.forEach((myAtt) => {
-      collectedAttributes = resolveAttr(cid2, myAtt);
-      output += `<td><strong>${collectedAttributes.name.slice(0, 3).toUpperCase()}:</strong></td><td>${resolveAttr(cid, `${myAtt}_mod`).current > 0 ? `+${resolveAttr(cid2, `${myAtt}_mod`).current}` : resolveAttr(cid, `${myAtt}_mod`).current}</td><td><small>(${collectedAttributes.current})</small></td><td>&nbsp;&nbsp;</td>`;
-      if (columnjumper == 1) {
+      collectedAttributes = resolveAttr(cid, myAtt);
+      output += `<td><strong>${collectedAttributes.name.slice(0, 3).toUpperCase()}:</strong></td><td>${resolveAttr(cid, `${myAtt}_mod`).current > 0 ? `+${resolveAttr(cid, `${myAtt}_mod`).current}` : resolveAttr(cid, `${myAtt}_mod`).current}</td><td><small>(${collectedAttributes.current})</small></td><td>&nbsp;&nbsp;</td>`;
+      if (columnjumper === 1) {
         output += '</tr><tr>';
         columnjumper = 0;
       } else {
@@ -41,12 +41,12 @@ on('ready', () => {
     return output;
   };
 
-  const getCharOtherAtt = (cid) => {
+  const getCharOtherAtt = (cid2) => {
     output = '';
-    cid = cid.id;
+    const cid = cid2.id;
 
     output = `<br><small><i>${resolveAttr(cid, 'race').current} Lvl ${resolveAttr(cid, 'level').current} ${resolveAttr(cid, 'class').current}</i></small>`;
-    output += (resolveAttr(cid, 'inspiration').current == 'on' ? " <strong style='color:white;text-shadow: 2px 2px 4px #009000;' title='Character has inspiration!'>&#127775;</strong>" : '');
+    output += (resolveAttr(cid, 'inspiration').current === 'on' ? " <strong style='color:white;text-shadow: 2px 2px 4px #009000;' title='Character has inspiration!'>&#127775;</strong>" : '');
     output += `<br><br><strong>HP:</strong> ${resolveAttr(cid, 'hp').current}/${resolveAttr(cid, 'hp').max} `;
     output += (parseInt(resolveAttr(cid, 'hp').current, 10) < parseInt(resolveAttr(cid, 'hp').max, 10) ? ` <small style='color:#9d0a0e' title='down by ${parseInt(resolveAttr(cid, 'hp').max, 10) - parseInt(resolveAttr(cid, 'hp').current, 10)} '>&#129301; ${parseInt(resolveAttr(cid, 'hp').current, 10) - parseInt(resolveAttr(cid, 'hp').max, 10)}</small> ` : '');
     output += (parseInt(resolveAttr(cid, 'hp_temp').current, 10) > 0 ? ` <span style='color:green'>+ ${resolveAttr(cid, 'hp_temp').current} TMP</span>` : '');
@@ -56,6 +56,28 @@ on('ready', () => {
     return output;
   };
 
+  const getSpellSlots = (cid2) => {
+    output = '';
+    const cid = cid2.id;
+
+    output = '<br><b>Spell slots</b>';
+    let i = 1;
+    let spellLevelTotal = 0;
+    let spellLevelEx = 0;
+    while (i < 10) {
+      spellLevelTotal = resolveAttr(cid, `lvl${parseInt(i, 10)}_slots_total`).current;
+      spellLevelEx = resolveAttr(cid, `lvl${parseInt(i, 10)}_slots_expended`).current;
+      if (spellLevelTotal > 0) {
+        if (spellLevelEx / spellLevelTotal <= 0.25) spellLevelEx = `<span style='color:red'>${spellLevelEx}</span>`;
+        else if (spellLevelEx / spellLevelTotal <= 0.5) spellLevelEx = `<span style='color:orange'>${spellLevelEx}</span>`;
+        else if (spellLevelEx / spellLevelTotal <= 0.75) spellLevelEx = `<span style='color:green'>${spellLevelEx}</span>`;
+        else spellLevelEx = `<span style='color:blue'>${spellLevelEx}</span>`;
+        output += `<br><b>Level ${i}:</b> ${spellLevelEx} / ${spellLevelTotal}`;
+      }
+      i += 1;
+    }
+    return output;
+  };
 
   on('chat:message', (msg) => {
     if (msg.type !== 'api' && !playerIsGM(msg.playerid)) return;
@@ -84,7 +106,7 @@ on('ready', () => {
           const charname = character.get('name');
           const charicon = character.get('avatar');
           if (myoutput.length > 0) myoutput += '<br>';
-          myoutput += `<div style='display:inline-block; font-variant: small-caps; color:##9d0a0e; font-size:1.8em;margin-top:5px;'><img src='${charicon}' style='height:48px;width:auto;margin-right:5px;margin-bottom:5px;vertical-align:middle'>${charname}</div>${getCharOtherAtt(character)}${getCharMainAtt(character)}`;
+          myoutput += `<div style='display:inline-block; font-variant: small-caps; color:##9d0a0e; font-size:1.8em;margin-top:5px;'><img src='${charicon}' style='height:48px;width:auto;margin-right:5px;margin-bottom:5px;vertical-align:middle'>${charname}</div>${getCharOtherAtt(character)}${getCharMainAtt(character)}${getSpellSlots(character)}`;
         }
       });
     }
