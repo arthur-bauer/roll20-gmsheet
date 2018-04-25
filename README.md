@@ -1,4 +1,4 @@
-# Roll20-GMSheet
+# Roll20-GMSheet %%version%%
 
 A quick GM Cheatsheet for the D&D 5e OGL sheets on [Roll20](http://roll20.net).
 Please use `!gmsheet -h` for inline help and examples.

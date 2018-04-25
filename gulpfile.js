@@ -56,17 +56,20 @@ gulp.task('lintfix', () => {
 
 gulp.task('pub1', () => {
   gulp.src('./README.md')
+    .pipe(replace(new RegExp('%%version%%', 'g'), version))
     .pipe(markdown())
     .pipe(replace(new RegExp('\n', 'g'), '')) // eslint-disable-line no-control-regex
     .pipe(replace(new RegExp('"', 'g'), '\''))
     .pipe(gulp.dest('./tmp/script'));
 
   gulp.src('./README.md')
+    .pipe(replace(new RegExp('%%version%%', 'g'), version))
     .pipe(replace(new RegExp('\n', 'g'), '\\r')) // eslint-disable-line no-control-regex
     .pipe(replace(new RegExp('"', 'g'), '\''))
     .pipe(gulp.dest('./tmp/package'));
 
   gulp.src('./README.md')
+    .pipe(replace(new RegExp('%%version%%', 'g'), version))
     .pipe(gulp.dest('./publish'));
 
   gulp.src('./prep/script.json')
