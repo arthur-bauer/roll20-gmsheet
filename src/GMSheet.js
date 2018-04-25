@@ -64,10 +64,12 @@ on('ready', () => {
     let i = 1;
     let spellLevelTotal = 0;
     let spellLevelEx = 0;
+    let spellcount = 0;
     while (i < 10) {
       spellLevelTotal = resolveAttr(cid, `lvl${parseInt(i, 10)}_slots_total`).current;
       spellLevelEx = resolveAttr(cid, `lvl${parseInt(i, 10)}_slots_expended`).current;
       if (spellLevelTotal > 0) {
+        spellcount += 1;
         if (spellLevelEx / spellLevelTotal <= 0.25) spellLevelEx = `<span style='color:red'>${spellLevelEx}</span>`;
         else if (spellLevelEx / spellLevelTotal <= 0.5) spellLevelEx = `<span style='color:orange'>${spellLevelEx}</span>`;
         else if (spellLevelEx / spellLevelTotal <= 0.75) spellLevelEx = `<span style='color:green'>${spellLevelEx}</span>`;
@@ -76,6 +78,7 @@ on('ready', () => {
       }
       i += 1;
     }
+    if (spellcount < 1) output = '';
     return output;
   };
 

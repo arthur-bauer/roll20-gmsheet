@@ -12,6 +12,7 @@ The script currently shows
 - HP, also indicating temporary hitpoints and injuries
 - speed, passive perception, initiative bonus
 - main abilities + modifiers
+- available spell slots
 
 ## Usage
 

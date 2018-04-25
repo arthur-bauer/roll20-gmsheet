@@ -3,7 +3,7 @@
 /* global on log playerIsGM findObjs getObj getAttrByName sendChat globalconfig */ // eslint-disable-line no-unused-vars
 
 /*
-GMSheet 0.1.0
+GMSheet 0.1.1
 
 A quick GM Cheatsheet for the D&D 5e OGL sheets on roll20.net.
 Please use `!gmsheet` for inline help and examples.
@@ -12,7 +12,7 @@ arthurbauer@me.com
 */
 
 on('ready', function () {
-  var v = '0.1.0'; // version number
+  var v = '0.1.1'; // version number
   var scname = 'GMSheet'; // script name
   log(scname + ' v' + v + ' online. Select one or more party members, then use `!gmsheet -h`');
   var output = '';
@@ -68,15 +68,18 @@ on('ready', function () {
     var i = 1;
     var spellLevelTotal = 0;
     var spellLevelEx = 0;
+    var spellcount = 0;
     while (i < 10) {
       spellLevelTotal = resolveAttr(cid, 'lvl' + parseInt(i, 10) + '_slots_total').current;
       spellLevelEx = resolveAttr(cid, 'lvl' + parseInt(i, 10) + '_slots_expended').current;
       if (spellLevelTotal > 0) {
+        spellcount += 1;
         if (spellLevelEx / spellLevelTotal <= 0.25) spellLevelEx = '<span style=\'color:red\'>' + spellLevelEx + '</span>';else if (spellLevelEx / spellLevelTotal <= 0.5) spellLevelEx = '<span style=\'color:orange\'>' + spellLevelEx + '</span>';else if (spellLevelEx / spellLevelTotal <= 0.75) spellLevelEx = '<span style=\'color:green\'>' + spellLevelEx + '</span>';else spellLevelEx = '<span style=\'color:blue\'>' + spellLevelEx + '</span>';
         output += '<br><b>Level ' + i + ':</b> ' + spellLevelEx + ' / ' + spellLevelTotal;
       }
       i += 1;
     }
+    if (spellcount < 1) output = '';
     return output;
   };
 
@@ -93,7 +96,7 @@ on('ready', function () {
 
     if (msg.content.includes('-help') || msg.content.includes('-h')) {
       //! help
-      sendChat(scname, '/w gm <h1 id=\'roll20-gmsheet-0-1-0\'>Roll20-GMSheet 0.1.0</h1><p>A quick GM Cheatsheet for the D&amp;D 5e OGL sheets on <a href=\'http://roll20.net\'>Roll20</a>.Please use <code>!gmsheet -h</code> for inline help and examples.</p><h2 id=\'displayed-information\'>Displayed information</h2><p>The script currently shows</p><ul><li>name, race, level and class, including the character&#39;s avatar</li><li>inspiration!</li><li>HP, also indicating temporary hitpoints and injuries</li><li>speed, passive perception, initiative bonus</li><li>main abilities + modifiers</li></ul><h2 id=\'usage\'>Usage</h2><ol><li>Select one or several tokens</li><li>Type <code>!gmsheet</code> in chat</li></ol>'); // eslint-disable-line quotes
+      sendChat(scname, '/w gm <h1 id=\'roll20-gmsheet-0-1-1\'>Roll20-GMSheet 0.1.1</h1><p>A quick GM Cheatsheet for the D&amp;D 5e OGL sheets on <a href=\'http://roll20.net\'>Roll20</a>.Please use <code>!gmsheet -h</code> for inline help and examples.</p><h2 id=\'displayed-information\'>Displayed information</h2><p>The script currently shows</p><ul><li>name, race, level and class, including the character&#39;s avatar</li><li>inspiration!</li><li>HP, also indicating temporary hitpoints and injuries</li><li>speed, passive perception, initiative bonus</li><li>main abilities + modifiers</li><li>available spell slots</li></ul><h2 id=\'usage\'>Usage</h2><ol><li>Select one or several tokens</li><li>Type <code>!gmsheet</code> in chat</li></ol>'); // eslint-disable-line quotes
     } else {
       msg.selected.forEach(function (obj) {
         var token = getObj('graphic', obj._id); // eslint-disable-line no-underscore-dangle

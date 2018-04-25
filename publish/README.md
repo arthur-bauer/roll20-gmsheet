@@ -1,4 +1,4 @@
-# Roll20-GMSheet 0.1.0
+# Roll20-GMSheet 0.1.1
 
 A quick GM Cheatsheet for the D&D 5e OGL sheets on [Roll20](http://roll20.net).
 Please use `!gmsheet -h` for inline help and examples.
@@ -12,6 +12,7 @@ The script currently shows
 - HP, also indicating temporary hitpoints and injuries
 - speed, passive perception, initiative bonus
 - main abilities + modifiers
+- available spell slots
 
 ## Usage
 
