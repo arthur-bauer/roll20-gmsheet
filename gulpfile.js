@@ -32,7 +32,7 @@ gulp.task('bump-pre', () => bumpVersion('prepatch'));
 gulp.task('bump-prerelease', () => bumpVersion('prerelease'));
 
 gulp.task('lint', () => {
-  gulp.src(['./*.js'])
+  gulp.src(['./src/*.js'])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());
@@ -42,10 +42,10 @@ gulp.task('lint', () => {
 });
 
 gulp.task('lintfix', () => {
-  gulp.src(['./*.js'])
+  gulp.src(['./src/*.js'])
     .pipe(eslint({ fix: true }))
     .pipe(eslint.format())
-    .pipe(gulp.dest('./'));
+    .pipe(gulp.dest('./src/'));
 });
 
 
