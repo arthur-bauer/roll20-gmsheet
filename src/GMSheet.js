@@ -24,6 +24,7 @@ on('ready', () => {
     max: getAttrByName(cid, name, 'max'),
   });
   const getCharMainAtt = (cid2) => {
+    //! Main attributes
     output = '<table border=0><tr>';
     const cid = cid2.id;
     wantedAttributes = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
@@ -42,6 +43,7 @@ on('ready', () => {
   };
 
   const getCharOtherAtt = (cid2) => {
+    //! Other Attributes
     output = '';
     const cid = cid2.id;
 
@@ -57,6 +59,7 @@ on('ready', () => {
   };
 
   const getSpellSlots = (cid2) => {
+    //! Spell slots
     output = '';
     const cid = cid2.id;
 
@@ -86,7 +89,7 @@ on('ready', () => {
     if (msg.type !== 'api' && !playerIsGM(msg.playerid)) return;
     if (msg.content.startsWith('!gmsheet') !== true) return;
     if (msg.content.includes('-help') || msg.content.includes('-h')) {
-      //! help
+      //! Help
       sendChat(scname, `/w gm %%README%%`); // eslint-disable-line quotes
     } else if (msg.selected == null) {
       sendChat(scname, '/w gm **ERROR:** You need to select at least one character.');
@@ -94,6 +97,7 @@ on('ready', () => {
       /* will add a routine to save/load characters later */
     } else {
       msg.selected.forEach((obj) => {
+        //! Output
         const token = getObj('graphic', obj._id); // eslint-disable-line no-underscore-dangle
         let character;
         if (token) {
