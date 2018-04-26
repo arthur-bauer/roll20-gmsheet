@@ -85,18 +85,13 @@ on('ready', () => {
   on('chat:message', (msg) => {
     if (msg.type !== 'api' && !playerIsGM(msg.playerid)) return;
     if (msg.content.startsWith('!gmsheet') !== true) return;
-    if (msg.selected == null) {
-      sendChat(scname, '/w gm **ERROR:** You need to select at least one character.');
-
-      /* will add a routine to save/load characters later */
-
-      return;
-    }
-
-
     if (msg.content.includes('-help') || msg.content.includes('-h')) {
       //! help
       sendChat(scname, `/w gm %%README%%`); // eslint-disable-line quotes
+    } else if (msg.selected == null) {
+      sendChat(scname, '/w gm **ERROR:** You need to select at least one character.');
+
+      /* will add a routine to save/load characters later */
     } else {
       msg.selected.forEach((obj) => {
         const token = getObj('graphic', obj._id); // eslint-disable-line no-underscore-dangle
