@@ -53,7 +53,7 @@ on('ready', () => {
     output += (parseInt(resolveAttr(cid, 'hp').current, 10) < parseInt(resolveAttr(cid, 'hp').max, 10) ? ` <small style='color:#9d0a0e' title='down by ${parseInt(resolveAttr(cid, 'hp').max, 10) - parseInt(resolveAttr(cid, 'hp').current, 10)} '>&#129301; ${parseInt(resolveAttr(cid, 'hp').current, 10) - parseInt(resolveAttr(cid, 'hp').max, 10)}</small> ` : '');
     output += (parseInt(resolveAttr(cid, 'hp_temp').current, 10) > 0 ? ` <span style='color:green'>+ ${resolveAttr(cid, 'hp_temp').current} TMP</span>` : '');
     output += `<br><strong>AC:</strong> ${resolveAttr(cid, 'ac').current}`;
-    output += `<br><br>Speed: ${resolveAttr(cid, 'speed').current} ft, Passive Perception: ${resolveAttr(cid, 'passive_wisdom').current}<br>Initiative bonus: ${resolveAttr(cid, 'initiative_bonus').current > 0 ? `+${resolveAttr(cid, 'initiative_bonus').current}` : resolveAttr(cid, 'initiative_bonus').current}`;
+    output += `<br><br>Speed: ${resolveAttr(cid, 'speed').current} ft, Passive Perception: ${resolveAttr(cid, 'passive_wisdom').current}<br>Initiative bonus: ${resolveAttr(cid, 'initiative_bonus').current > 0 ? `+${resolveAttr(cid, 'initiative_bonus').current}` : resolveAttr(cid, 'initiative_bonus').current}, Proficiency ${resolveAttr(cid, 'pb').current > 0 ? `+${resolveAttr(cid, 'pb').current}` : resolveAttr(cid, 'pb').current}`;
     output += '<br><br>';
     return output;
   };
