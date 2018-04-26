@@ -112,9 +112,8 @@ on('ready', () => {
           myoutput += `<div style='display:inline-block; font-variant: small-caps; color:##9d0a0e; font-size:1.8em;margin-top:5px;'><img src='${charicon}' style='height:48px;width:auto;margin-right:5px;margin-bottom:5px;vertical-align:middle'>${charname}</div>${getCharOtherAtt(character)}${getCharMainAtt(character)}${getSpellSlots(character)}`;
         }
       });
+      sendChat(scname, `/w gm <div style='border:1px solid black; background-color: #f9f7ec; padding:8px; border-radius: 6px; font-size:0.85em;line-height:0.95em;'>${myoutput}</div>`); // eslint-disable-line quotes
+      myoutput = '';
     }
-
-    sendChat(scname, `/w gm <div style='border:1px solid black; background-color: #f9f7ec; padding:8px; border-radius: 6px; font-size:0.85em;line-height:0.95em;'>${myoutput}</div>`); // eslint-disable-line quotes
-    myoutput = '';
   });
 });
