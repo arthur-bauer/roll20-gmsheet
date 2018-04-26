@@ -85,18 +85,13 @@ on('ready', () => {
   on('chat:message', (msg) => {
     if (msg.type !== 'api' && !playerIsGM(msg.playerid)) return;
     if (msg.content.startsWith('!gmsheet') !== true) return;
-    if (msg.selected == null) {
-      sendChat(scname, '/w gm **ERROR:** You need to select at least one character.');
-
-      /* will add a routine to save/load characters later */
-
-      return;
-    }
-
-
     if (msg.content.includes('-help') || msg.content.includes('-h')) {
       //! help
       sendChat(scname, `/w gm %%README%%`); // eslint-disable-line quotes
+    } else if (msg.selected == null) {
+      sendChat(scname, '/w gm **ERROR:** You need to select at least one character.');
+
+      /* will add a routine to save/load characters later */
     } else {
       msg.selected.forEach((obj) => {
         const token = getObj('graphic', obj._id); // eslint-disable-line no-underscore-dangle
@@ -112,9 +107,8 @@ on('ready', () => {
           myoutput += `<div style='display:inline-block; font-variant: small-caps; color:##9d0a0e; font-size:1.8em;margin-top:5px;'><img src='${charicon}' style='height:48px;width:auto;margin-right:5px;margin-bottom:5px;vertical-align:middle'>${charname}</div>${getCharOtherAtt(character)}${getCharMainAtt(character)}${getSpellSlots(character)}`;
         }
       });
+      sendChat(scname, `/w gm <div style='border:1px solid black; background-color: #f9f7ec; padding:8px; border-radius: 6px; font-size:0.85em;line-height:0.95em;'>${myoutput}</div>`); // eslint-disable-line quotes
+      myoutput = '';
     }
-
-    sendChat(scname, `/w gm <div style='border:1px solid black; background-color: #f9f7ec; padding:8px; border-radius: 6px; font-size:0.85em;line-height:0.95em;'>${myoutput}</div>`); // eslint-disable-line quotes
-    myoutput = '';
   });
 });
