@@ -46,11 +46,14 @@ on('ready', () => {
     //! Other Attributes
     output = '';
     const cid = cid2.id;
-
+    const hp = parseInt(resolveAttr(cid, 'hp').current, 10);
+    const maxhp = parseInt(resolveAttr(cid, 'hp').max, 10);
+    const hpdown = maxhp - hp;
+    const hppercentage = Math.floor(((100 * hp) / maxhp) / 5) * 5;
     output = `<br><small><i>${resolveAttr(cid, 'race').current} Lvl ${resolveAttr(cid, 'level').current} ${resolveAttr(cid, 'class').current}</i></small>`;
     output += (resolveAttr(cid, 'inspiration').current === 'on' ? " <strong style='color:white;text-shadow: 2px 2px 4px #009000;' title='Character has inspiration!'>&#127775;</strong>" : '');
-    output += `<br><br><strong>HP:</strong> ${resolveAttr(cid, 'hp').current}/${resolveAttr(cid, 'hp').max} `;
-    output += (parseInt(resolveAttr(cid, 'hp').current, 10) < parseInt(resolveAttr(cid, 'hp').max, 10) ? ` <small style='color:#9d0a0e' title='down by ${parseInt(resolveAttr(cid, 'hp').max, 10) - parseInt(resolveAttr(cid, 'hp').current, 10)} '>&#129301; ${parseInt(resolveAttr(cid, 'hp').current, 10) - parseInt(resolveAttr(cid, 'hp').max, 10)}</small> ` : '');
+    output += `<br><br><strong>HP:</strong> ${hp}/${maxhp} `;
+    output += (hp < maxhp ? ` <small style='color:#9d0a0e' title='down by ${hpdown} points, (${hppercentage}%) '>&#129301; ${hppercentage}% (-${hpdown} HP)</small> ` : '');
     output += (parseInt(resolveAttr(cid, 'hp_temp').current, 10) > 0 ? ` <span style='color:green'>+ ${resolveAttr(cid, 'hp_temp').current} TMP</span>` : '');
     output += `<br><strong>AC:</strong> ${resolveAttr(cid, 'ac').current}`;
     output += `<br><br>Speed: ${resolveAttr(cid, 'speed').current} ft, Passive Perception: ${resolveAttr(cid, 'passive_wisdom').current}<br>Initiative bonus: ${resolveAttr(cid, 'initiative_bonus').current > 0 ? `+${resolveAttr(cid, 'initiative_bonus').current}` : resolveAttr(cid, 'initiative_bonus').current}, Proficiency ${resolveAttr(cid, 'pb').current > 0 ? `+${resolveAttr(cid, 'pb').current}` : resolveAttr(cid, 'pb').current}`;
