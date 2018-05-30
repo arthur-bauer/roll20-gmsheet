@@ -18,6 +18,7 @@ on('ready', () => {
   let wantedAttributes;
   let columnjumper = 0;
   let myoutput = '';
+  let resourceName = '';
   const resolveAttr = (cid, name) => ({
     name,
     current: getAttrByName(cid, name),
@@ -66,7 +67,7 @@ on('ready', () => {
     output = '';
     const cid = cid2.id;
 
-    output = '<br><b>Spell slots</b>';
+    output = '<br><b>Spell slots</b><br>';
     let i = 1;
     let spellLevelTotal = 0;
     let spellLevelEx = 0;
@@ -80,11 +81,37 @@ on('ready', () => {
         else if (spellLevelEx / spellLevelTotal <= 0.5) spellLevelEx = `<span style='color:orange'>${spellLevelEx}</span>`;
         else if (spellLevelEx / spellLevelTotal <= 0.75) spellLevelEx = `<span style='color:green'>${spellLevelEx}</span>`;
         else spellLevelEx = `<span style='color:blue'>${spellLevelEx}</span>`;
-        output += `<br><b>Level ${i}:</b> ${spellLevelEx} / ${spellLevelTotal}`;
+        output += `<b>Level ${i}:</b> ${spellLevelEx} / ${spellLevelTotal}<br>`;
       }
       i += 1;
     }
     if (spellcount < 1) output = '';
+
+    // start with sorcerer points here...
+    // check which attribute to get.
+    if (resolveAttr(cid, 'class').current === 'Sorcerer') {
+      resourceName = 'Sorcerer points';
+    } else if (resolveAttr(cid, 'class').current === 'Barbarian') {
+      resourceName = 'Rage';
+    } else if (resolveAttr(cid, 'class').current === 'Bard') {
+      resourceName = 'Bardic Inspiration';
+    } else if (resolveAttr(cid, 'class').current === 'Cleric' || resolveAttr(cid, 'class').current === 'Paladin') {
+      resourceName = 'Channel Divinity';
+    } else if (resolveAttr(cid, 'class').current === 'Druid') {
+      resourceName = 'Wild Shape';
+    } else if (resolveAttr(cid, 'class').current === 'Fighter') {
+      resourceName = 'Second Wind';
+    } else if (resolveAttr(cid, 'class').current === 'Monk') {
+      resourceName = 'KI';
+    } else if (resolveAttr(cid, 'class').current === 'Warlock') {
+      resourceName = 'Spell Slots';
+    }
+
+    const classResourceTotal = resolveAttr(cid, 'class_resource').max;
+    const classResourceCurrent = resolveAttr(cid, 'class_resource').current;
+    if (resourceName) output += `<br>${resourceName}: ${classResourceCurrent}/${classResourceTotal}`;
+    resourceName = '';
+
     return output;
   };
 
@@ -111,7 +138,7 @@ on('ready', () => {
           const charname = character.get('name');
           const charicon = character.get('avatar');
           if (myoutput.length > 0) myoutput += '<br>';
-          myoutput += `<div style='display:inline-block; font-variant: small-caps; color:##9d0a0e; font-size:1.8em;margin-top:5px;'><img src='${charicon}' style='height:48px;width:auto;margin-right:5px;margin-bottom:5px;vertical-align:middle'>${charname}</div>${getCharOtherAtt(character)}${getCharMainAtt(character)}${getSpellSlots(character)}`;
+          myoutput += `<div style='display:inline-block; font-variant: small-caps; color:##9d0a0e; font-size:1.8em;margin-top:5px;'><img src='${charicon}' style='height:48px;width:auto;margin-right:5px;margin-bottom:0px;margin-top:5px; vertical-align:middle'>${charname}</div>${getCharOtherAtt(character)}${getCharMainAtt(character)}${getSpellSlots(character)}`;
         }
       });
       sendChat(scname, `/w gm <div style='border:1px solid black; background-color: #f9f7ec; padding:8px; border-radius: 6px; font-size:0.85em;line-height:0.95em;'>${myoutput}</div>`); // eslint-disable-line quotes
