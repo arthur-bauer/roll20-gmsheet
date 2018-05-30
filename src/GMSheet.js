@@ -79,6 +79,12 @@ on('ready', () => {
       i += 1;
     }
     if (spellcount < 1) output = '';
+    
+    // start with sorcerer points here...
+    // check which attribute to get.
+    
+    
+    
     return output;
   };
 
