@@ -1,3 +1,4 @@
 x Correct colors (something more like D&D)
 x Spell slots
-Clickable links for initiative etc.
+Clickable links for initiative etc. +maybe
+(A) Add a function to save and reuse the token selection
