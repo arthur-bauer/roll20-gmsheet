@@ -18,12 +18,14 @@ on('ready', () => {
   let wantedAttributes;
   let columnjumper = 0;
   let myoutput = '';
+  let resourceName = '';
   const resolveAttr = (cid, name) => ({
     name,
     current: getAttrByName(cid, name),
     max: getAttrByName(cid, name, 'max'),
   });
   const getCharMainAtt = (cid2) => {
+    //! Main attributes
     output = '<table border=0><tr>';
     const cid = cid2.id;
     wantedAttributes = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
@@ -42,25 +44,30 @@ on('ready', () => {
   };
 
   const getCharOtherAtt = (cid2) => {
+    //! Other Attributes
     output = '';
     const cid = cid2.id;
-
+    const hp = parseInt(resolveAttr(cid, 'hp').current, 10);
+    const maxhp = parseInt(resolveAttr(cid, 'hp').max, 10);
+    const hpdown = maxhp - hp;
+    const hppercentage = Math.floor(((100 * hp) / maxhp) / 5) * 5;
     output = `<br><small><i>${resolveAttr(cid, 'race').current} Lvl ${resolveAttr(cid, 'level').current} ${resolveAttr(cid, 'class').current}</i></small>`;
     output += (resolveAttr(cid, 'inspiration').current === 'on' ? " <strong style='color:white;text-shadow: 2px 2px 4px #009000;' title='Character has inspiration!'>&#127775;</strong>" : '');
-    output += `<br><br><strong>HP:</strong> ${resolveAttr(cid, 'hp').current}/${resolveAttr(cid, 'hp').max} `;
-    output += (parseInt(resolveAttr(cid, 'hp').current, 10) < parseInt(resolveAttr(cid, 'hp').max, 10) ? ` <small style='color:#9d0a0e' title='down by ${parseInt(resolveAttr(cid, 'hp').max, 10) - parseInt(resolveAttr(cid, 'hp').current, 10)} '>&#129301; ${parseInt(resolveAttr(cid, 'hp').current, 10) - parseInt(resolveAttr(cid, 'hp').max, 10)}</small> ` : '');
+    output += `<br><br><strong>HP:</strong> ${hp}/${maxhp} `;
+    output += (hp < maxhp ? ` <small style='color:#9d0a0e' title='down by ${hpdown} points, (${hppercentage}%) '>&#129301; ${hppercentage}% (-${hpdown} HP)</small> ` : '');
     output += (parseInt(resolveAttr(cid, 'hp_temp').current, 10) > 0 ? ` <span style='color:green'>+ ${resolveAttr(cid, 'hp_temp').current} TMP</span>` : '');
     output += `<br><strong>AC:</strong> ${resolveAttr(cid, 'ac').current}`;
-    output += `<br><br>Speed: ${resolveAttr(cid, 'speed').current} ft, Passive Perception: ${resolveAttr(cid, 'passive_wisdom').current}<br>Initiative bonus: ${resolveAttr(cid, 'initiative_bonus').current > 0 ? `+${resolveAttr(cid, 'initiative_bonus').current}` : resolveAttr(cid, 'initiative_bonus').current}`;
+    output += `<br><br>Speed: ${resolveAttr(cid, 'speed').current} ft, Passive Perception: ${resolveAttr(cid, 'passive_wisdom').current}<br>Initiative bonus: ${resolveAttr(cid, 'initiative_bonus').current > 0 ? `+${resolveAttr(cid, 'initiative_bonus').current}` : resolveAttr(cid, 'initiative_bonus').current}, Proficiency ${resolveAttr(cid, 'pb').current > 0 ? `+${resolveAttr(cid, 'pb').current}` : resolveAttr(cid, 'pb').current}`;
     output += '<br><br>';
     return output;
   };
 
   const getSpellSlots = (cid2) => {
+    //! Spell slots
     output = '';
     const cid = cid2.id;
 
-    output = '<br><b>Spell slots</b>';
+    output = '<br><b>Spell slots</b><br>';
     let i = 1;
     let spellLevelTotal = 0;
     let spellLevelEx = 0;
@@ -74,11 +81,37 @@ on('ready', () => {
         else if (spellLevelEx / spellLevelTotal <= 0.5) spellLevelEx = `<span style='color:orange'>${spellLevelEx}</span>`;
         else if (spellLevelEx / spellLevelTotal <= 0.75) spellLevelEx = `<span style='color:green'>${spellLevelEx}</span>`;
         else spellLevelEx = `<span style='color:blue'>${spellLevelEx}</span>`;
-        output += `<br><b>Level ${i}:</b> ${spellLevelEx} / ${spellLevelTotal}`;
+        output += `<b>Level ${i}:</b> ${spellLevelEx} / ${spellLevelTotal}<br>`;
       }
       i += 1;
     }
     if (spellcount < 1) output = '';
+
+    // start with sorcerer points here...
+    // check which attribute to get.
+    if (resolveAttr(cid, 'class').current === 'Sorcerer') {
+      resourceName = 'Sorcerer points';
+    } else if (resolveAttr(cid, 'class').current === 'Barbarian') {
+      resourceName = 'Rage';
+    } else if (resolveAttr(cid, 'class').current === 'Bard') {
+      resourceName = 'Bardic Inspiration';
+    } else if (resolveAttr(cid, 'class').current === 'Cleric' || resolveAttr(cid, 'class').current === 'Paladin') {
+      resourceName = 'Channel Divinity';
+    } else if (resolveAttr(cid, 'class').current === 'Druid') {
+      resourceName = 'Wild Shape';
+    } else if (resolveAttr(cid, 'class').current === 'Fighter') {
+      resourceName = 'Second Wind';
+    } else if (resolveAttr(cid, 'class').current === 'Monk') {
+      resourceName = 'KI';
+    } else if (resolveAttr(cid, 'class').current === 'Warlock') {
+      resourceName = 'Spell Slots';
+    }
+
+    const classResourceTotal = resolveAttr(cid, 'class_resource').max;
+    const classResourceCurrent = resolveAttr(cid, 'class_resource').current;
+    if (resourceName) output += `<br>${resourceName}: ${classResourceCurrent}/${classResourceTotal}`;
+    resourceName = '';
+
     return output;
   };
 
@@ -86,7 +119,7 @@ on('ready', () => {
     if (msg.type !== 'api' && !playerIsGM(msg.playerid)) return;
     if (msg.content.startsWith('!gmsheet') !== true) return;
     if (msg.content.includes('-help') || msg.content.includes('-h')) {
-      //! help
+      //! Help
       sendChat(scname, `/w gm %%README%%`); // eslint-disable-line quotes
     } else if (msg.selected == null) {
       sendChat(scname, '/w gm **ERROR:** You need to select at least one character.');
@@ -94,6 +127,7 @@ on('ready', () => {
       /* will add a routine to save/load characters later */
     } else {
       msg.selected.forEach((obj) => {
+        //! Output
         const token = getObj('graphic', obj._id); // eslint-disable-line no-underscore-dangle
         let character;
         if (token) {
@@ -104,7 +138,7 @@ on('ready', () => {
           const charname = character.get('name');
           const charicon = character.get('avatar');
           if (myoutput.length > 0) myoutput += '<br>';
-          myoutput += `<div style='display:inline-block; font-variant: small-caps; color:##9d0a0e; font-size:1.8em;margin-top:5px;'><img src='${charicon}' style='height:48px;width:auto;margin-right:5px;margin-bottom:5px;vertical-align:middle'>${charname}</div>${getCharOtherAtt(character)}${getCharMainAtt(character)}${getSpellSlots(character)}`;
+          myoutput += `<div style='display:inline-block; font-variant: small-caps; color:##9d0a0e; font-size:1.8em;margin-top:5px;'><img src='${charicon}' style='height:48px;width:auto;margin-right:5px;margin-bottom:0px;margin-top:5px; vertical-align:middle'>${charname}</div>${getCharOtherAtt(character)}${getCharMainAtt(character)}${getSpellSlots(character)}`;
         }
       });
       sendChat(scname, `/w gm <div style='border:1px solid black; background-color: #f9f7ec; padding:8px; border-radius: 6px; font-size:0.85em;line-height:0.95em;'>${myoutput}</div>`); // eslint-disable-line quotes
