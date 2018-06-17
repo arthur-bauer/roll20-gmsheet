@@ -2,7 +2,7 @@
     "name": "GMSheet",
     "script": "GMSheet.js",
     "version": "%%version%%",
-    "previousversions": [],
+    "previousversions": ["0.1.0","0.1.1","0.1.2","0.1.3","0.1.4"],
     "description": "%%README%%",
     "authors": "Arthur B",
     "roll20userid": "694750",
