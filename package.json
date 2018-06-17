@@ -1,6 +1,6 @@
 {
   "name": "roll20-gmsheet",
-  "version": "0.1.3-0",
+  "version": "0.1.3",
   "description": "A GM Cheatsheet for Roll20 and the OGL sheet",
   "main": "src/GMSheet.js",
   "scripts": {
