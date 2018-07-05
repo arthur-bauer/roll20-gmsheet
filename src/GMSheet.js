@@ -19,6 +19,8 @@ on('ready', () => {
   let columnjumper = 0;
   let myoutput = '';
   let resourceName = '';
+  let otherresourceName = '';
+
   const resolveAttr = (cid, name) => ({
     name,
     current: getAttrByName(cid, name),
@@ -87,29 +89,19 @@ on('ready', () => {
     }
     if (spellcount < 1) output = '';
 
-    // start with sorcerer points here...
-    // check which attribute to get.
-    if (resolveAttr(cid, 'class').current === 'Sorcerer') {
-      resourceName = 'Sorcerer points';
-    } else if (resolveAttr(cid, 'class').current === 'Barbarian') {
-      resourceName = 'Rage';
-    } else if (resolveAttr(cid, 'class').current === 'Bard') {
-      resourceName = 'Bardic Inspiration';
-    } else if (resolveAttr(cid, 'class').current === 'Cleric' || resolveAttr(cid, 'class').current === 'Paladin') {
-      resourceName = 'Channel Divinity';
-    } else if (resolveAttr(cid, 'class').current === 'Druid') {
-      resourceName = 'Wild Shape';
-    } else if (resolveAttr(cid, 'class').current === 'Fighter') {
-      resourceName = 'Second Wind';
-    } else if (resolveAttr(cid, 'class').current === 'Monk') {
-      resourceName = 'KI';
-    } else if (resolveAttr(cid, 'class').current === 'Warlock') {
-      resourceName = 'Spell Slots';
-    }
+    //! class resources
+
+    resourceName = resolveAttr(cid, 'class_resource_name').current;
+    otherresourceName = resolveAttr(cid, 'other_resource_name').current;
 
     const classResourceTotal = resolveAttr(cid, 'class_resource').max;
     const classResourceCurrent = resolveAttr(cid, 'class_resource').current;
-    if (resourceName) output += `<br>${resourceName}: ${classResourceCurrent}/${classResourceTotal}`;
+    const otherResourceTotal = resolveAttr(cid, 'other_resource').max;
+    const otherResourceCurrent = resolveAttr(cid, 'other_resource').current;
+
+
+    if (resourceName && classResourceTotal > 0) output += `<br>${resourceName}: ${classResourceCurrent}/${classResourceTotal}`;
+    if (otherresourceName && otherResourceTotal > 0) output += `<br>${otherresourceName}: ${otherResourceCurrent}/${otherResourceTotal}`;
     resourceName = '';
 
     return output;
