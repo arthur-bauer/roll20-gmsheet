@@ -21,11 +21,20 @@ on('ready', () => {
   let resourceName = '';
   let otherresourceName = '';
 
-  const resolveAttr = (cid, name) => ({
-    name,
-    current: getAttrByName(cid, name),
-    max: getAttrByName(cid, name, 'max'),
-  });
+  const resolveAttr = (cid, attname) => {
+    const attobj = findObjs({
+      type: 'attribute',
+      characterid: cid,
+      name: attname,
+    }, { caseInsensitive: true })[0];
+    if (!attobj) {
+      return { name: '', current: '', max: '' };
+    }
+    const att2 = { name: attobj.get('name'), current: attobj.get('current'), max: attobj.get('max') };
+    return att2;
+  };
+
+
   const getCharMainAtt = (cid2) => {
     //! Main attributes
     output = '<table border=0><tr>';
@@ -33,7 +42,7 @@ on('ready', () => {
     wantedAttributes = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
     wantedAttributes.forEach((myAtt) => {
       collectedAttributes = resolveAttr(cid, myAtt);
-      output += `<td><strong>${collectedAttributes.name.slice(0, 3).toUpperCase()}:</strong></td><td>${resolveAttr(cid, `${myAtt}_mod`).current > 0 ? `+${resolveAttr(cid, `${myAtt}_mod`).current}` : resolveAttr(cid, `${myAtt}_mod`).current}</td><td><small>(${collectedAttributes.current})</small></td><td>&nbsp;&nbsp;</td>`;
+      output += `<td><strong>${collectedAttributes.name.slice(0, 3).toUpperCase()}:</strong></td><td>&nbsp;${resolveAttr(cid, `${myAtt}_mod`).current > 0 ? `+${resolveAttr(cid, `${myAtt}_mod`).current}` : resolveAttr(cid, `${myAtt}_mod`).current}</td><td>&nbsp;<small>(${collectedAttributes.current})</small></td><td>&nbsp;&nbsp;</td>`;
       if (columnjumper === 1) {
         output += '</tr><tr>';
         columnjumper = 0;
@@ -76,6 +85,7 @@ on('ready', () => {
     let spellcount = 0;
     while (i < 10) {
       spellLevelTotal = resolveAttr(cid, `lvl${parseInt(i, 10)}_slots_total`).current;
+      if (spellLevelTotal === 0 || spellLevelTotal === '') break;
       spellLevelEx = resolveAttr(cid, `lvl${parseInt(i, 10)}_slots_expended`).current;
       if (spellLevelTotal > 0) {
         spellcount += 1;
