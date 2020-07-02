@@ -3,16 +3,21 @@
 /* global on log playerIsGM findObjs getObj getAttrByName sendChat globalconfig */ // eslint-disable-line no-unused-vars
 
 /*
-GMSheet 0.2.0
+GMSheet 0.2.1
 
 A quick GM Cheatsheet for the D&D 5e OGL sheets on roll20.net.
 Please use `!gmsheet` for inline help and examples.
 
 arthurbauer@me.com
+
+Changes:
+0.2.1:
+  Grab speeds and ac from NPCs also
+  Show size of creature as well
 */
 
 on('ready', function () {
-  var v = '0.2.0'; // version number
+  var v = '0.2.1'; // version number
   var scname = 'GMSheet'; // script name
   log(scname + ' v' + v + ' online. Select one or more party members, then use `!gmsheet -h`');
   var output = '';
@@ -63,13 +68,14 @@ on('ready', function () {
     var maxhp = parseInt(resolveAttr(cid, 'hp').max, 10);
     var hpdown = maxhp - hp;
     var hppercentage = Math.floor(100 * hp / maxhp / 5) * 5;
-    output = '<br><small><i>' + resolveAttr(cid, 'race').current + ' Lvl ' + resolveAttr(cid, 'level').current + ' ' + resolveAttr(cid, 'class').current + '</i></small>';
+    var sizebase = resolveAttr(cid, 'npc_sizebase').current;
+    output = '<br><small><i>' + resolveAttr(cid, 'race').current + ' Lvl ' + resolveAttr(cid, 'level').current + ' ' + resolveAttr(cid, 'class').current + '   Size: ' + sizebase + resolveAttr(cid, 'size').current + '</i></small>';
     output += resolveAttr(cid, 'inspiration').current === 'on' ? " <strong style='color:white;text-shadow: 2px 2px 4px #009000;' title='Character has inspiration!'>&#127775;</strong>" : '';
     output += '<br><br><strong>HP:</strong> ' + hp + '/' + maxhp + ' ';
     output += hp < maxhp ? ' <small style=\'color:#9d0a0e\' title=\'down by ' + hpdown + ' points, (' + hppercentage + '%) \'>&#129301; ' + hppercentage + '% (-' + hpdown + ' HP)</small> ' : '';
     output += parseInt(resolveAttr(cid, 'hp_temp').current, 10) > 0 ? ' <span style=\'color:green\'>+ ' + resolveAttr(cid, 'hp_temp').current + ' TMP</span>' : '';
-    output += '<br><strong>AC:</strong> ' + resolveAttr(cid, 'ac').current;
-    output += '<br><br>Speed: ' + resolveAttr(cid, 'speed').current + ' ft, Passive Perception: ' + resolveAttr(cid, 'passive_wisdom').current + '<br>Initiative bonus: ' + (resolveAttr(cid, 'initiative_bonus').current > 0 ? '+' + resolveAttr(cid, 'initiative_bonus').current : resolveAttr(cid, 'initiative_bonus').current) + ', Proficiency ' + (resolveAttr(cid, 'pb').current > 0 ? '+' + resolveAttr(cid, 'pb').current : resolveAttr(cid, 'pb').current);
+    output += '<br><strong>AC:</strong> ' + Math.max(resolveAttr(cid, 'ac').current,resolveAttr(cid, 'npcd_ac').current);
+    output += '<br><br>Speed: ' + resolveAttr(cid, 'speed').current + resolveAttr(cid, 'npc_speed').current + ' ft, Passive Perception: ' + resolveAttr(cid, 'passive_wisdom').current + '<br>Initiative bonus: ' + (resolveAttr(cid, 'initiative_bonus').current > 0 ? '+' + resolveAttr(cid, 'initiative_bonus').current : resolveAttr(cid, 'initiative_bonus').current) + ', Proficiency ' + (resolveAttr(cid, 'pb').current > 0 ? '+' + resolveAttr(cid, 'pb').current : resolveAttr(cid, 'pb').current);
     output += '<br><br>';
     return output;
   };
